@@ -114,11 +114,14 @@ private:
 		gutterDividerView = [OakCreateViewWithColor() retain];
 		[self addSubview:gutterDividerView];
 
+		statusDividerView = [OakCreateHorizontalLine([NSColor colorWithCalibratedWhite:0.500 alpha:1], [NSColor colorWithCalibratedWhite:0.750 alpha:1]) retain];
+		[self addSubview:statusDividerView];
+
 		statusBar = [[OTVStatusBar alloc] initWithFrame:NSZeroRect];
 		statusBar.delegate = self;
 		[self addSubview:statusBar];
 
-		for(NSView* view in @[ gutterScrollView, gutterView, gutterDividerView, textScrollView, statusBar ])
+		for(NSView* view in @[ gutterScrollView, gutterView, gutterDividerView, textScrollView, statusDividerView, statusBar ])
 			[view setTranslatesAutoresizingMaskIntoConstraints:NO];
 
 		document::document_ptr doc = document::from_content("", "text.plain"); // file type is only to avoid potential “no grammar” warnings in console
@@ -141,21 +144,21 @@ private:
 	[self removeConstraints:[self constraints]];
 	[super updateConstraints];
 
-	NSDictionary* views = NSDictionaryOfVariableBindings(gutterScrollView, gutterView, gutterDividerView, textScrollView, statusBar);
+	NSDictionary* views = NSDictionaryOfVariableBindings(gutterScrollView, gutterView, gutterDividerView, textScrollView, statusDividerView, statusBar);
 	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[gutterScrollView(==gutterView)][gutterDividerView(==1)][textScrollView(>=100)]|" options:NSLayoutFormatAlignAllTop|NSLayoutFormatAlignAllBottom metrics:nil views:views]];
 	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[statusBar]|"                                                                     options:0 metrics:nil views:views]];
+	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[statusDividerView][statusBar]|"                                                   options:NSLayoutFormatAlignAllLeft|NSLayoutFormatAlignAllRight metrics:nil views:views]];
 	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[gutterView(==textView)]"                                                          options:NSLayoutFormatAlignAllTop metrics:nil views:NSDictionaryOfVariableBindings(gutterView, textView)]];
 
 	NSMutableArray* stackedViews = [NSMutableArray array];
 	[stackedViews addObjectsFromArray:topAuxiliaryViews];
 	[stackedViews addObject:gutterScrollView];
 	[stackedViews addObjectsFromArray:bottomAuxiliaryViews];
-	[stackedViews addObject:statusBar];
+	[stackedViews addObject:statusDividerView];
 
 	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topView]" options:0 metrics:nil views:@{ @"topView" : stackedViews[0] }]];
 	for(size_t i = 0; i < [stackedViews count]-1; ++i)
 		[self addConstraint:[NSLayoutConstraint constraintWithItem:stackedViews[i] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stackedViews[i+1] attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
-	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[bottomView]|" options:0 metrics:nil views:@{ @"bottomView" : stackedViews.lastObject }]];
 
 	for(NSArray* views : { topAuxiliaryViews, bottomAuxiliaryViews })
 	{
@@ -419,33 +422,6 @@ private:
 		return;
 	[aView removeFromSuperview];
 	[self setNeedsUpdateConstraints:YES];
-}
-
-- (void)drawRect:(NSRect)aRect
-{
-	if([bottomAuxiliaryViews count])
-	{
-		CGFloat y = NSHeight(statusBar.frame), height = 0;
-		for(NSView* view in bottomAuxiliaryViews)
-			height += NSHeight(view.frame);
-
-		[[NSColor lightGrayColor] set];
-		NSRectFill(NSIntersectionRect(NSMakeRect(NSMinX(aRect), y, NSWidth(aRect), height - 1), aRect));
-		[[NSColor grayColor] set];
-		NSRectFill(NSIntersectionRect(NSMakeRect(NSMinX(aRect), y + height - 1, NSWidth(aRect), 1), aRect));
-	}
-
-	if([topAuxiliaryViews count])
-	{
-		CGFloat height = 0;
-		for(NSView* view in topAuxiliaryViews)
-			height += NSHeight(view.frame);
-
-		[[NSColor lightGrayColor] set];
-		NSRectFill(NSIntersectionRect(NSMakeRect(NSMinX(aRect), NSHeight(self.frame) - height + 1, NSWidth(aRect), height - 1), aRect));
-		[[NSColor grayColor] set];
-		NSRectFill(NSIntersectionRect(NSMakeRect(NSMinX(aRect), NSHeight(self.frame) - height, NSWidth(aRect), 1), aRect));
-	}
 }
 
 // ======================

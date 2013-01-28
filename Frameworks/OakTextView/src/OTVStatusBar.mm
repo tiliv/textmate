@@ -97,7 +97,6 @@ const NSInteger BundleItemSelector = 1;
 		[symbolPopUp setContentHuggingPriority:NSLayoutPriorityDefaultLow-1 forOrientation:NSLayoutConstraintOrientationHorizontal];
 
 		NSDictionary* views = @{
-			@"topBorder" : OakCreateHorizontalLine([NSColor colorWithCalibratedWhite:0.500 alpha:1], [NSColor colorWithCalibratedWhite:0.750 alpha:1]),
 			@"line"      : lineLabel,
 			@"selection" : selectionString,
 			@"grammar"   : grammarPopUp,
@@ -114,8 +113,6 @@ const NSInteger BundleItemSelector = 1;
 		}
 
 		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[line]-[selection]-[grammar]-[items]-[tabSize]-[symbol]-[recording]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:views]];
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[topBorder]|" options:0 metrics:nil views:views]];
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topBorder]" options:0 metrics:nil views:views]];
 		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[line]-(4)-|" options:0 metrics:nil views:views]];
 	}
 	return self;
@@ -123,7 +120,7 @@ const NSInteger BundleItemSelector = 1;
 
 - (NSSize)intrinsicContentSize
 {
-	return NSMakeSize(NSViewNoInstrinsicMetric, 25);
+	return NSMakeSize(NSViewNoInstrinsicMetric, 24);
 }
 
 - (void)drawRect:(NSRect)aRect
