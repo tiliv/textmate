@@ -12,13 +12,15 @@ static NSTextField* OakCreateTextField (NSString* label)
 	[res setDrawsBackground:NO];
 	[res setFont:[NSFont controlContentFontOfSize:[NSFont smallSystemFontSize]]];
 	[res setStringValue:label];
+	[res setAlignment:NSRightTextAlignment];
+	[[res cell] setBackgroundStyle:NSBackgroundStyleRaised];
 	return res;
 }
 
 static NSPopUpButton* OakCreatePopUpButton (NSString* initialItem = nil)
 {
 	NSPopUpButton* res = [NSPopUpButton new];
-	[[res cell] setBackgroundStyle:NSBackgroundStyleLight];
+	[[res cell] setBackgroundStyle:NSBackgroundStyleRaised];
 	[res setBordered:NO];
 	[res setFont:[NSFont controlContentFontOfSize:[NSFont smallSystemFontSize]]];
 
@@ -36,9 +38,9 @@ static NSButton* OakCreateImageButton (NSImage* image)
 {
 	NSButton* res = [NSButton new];
 
-	// [[res cell] setBackgroundStyle:NSBackgroundStyleRaised];
+	[[res cell] setBackgroundStyle:NSBackgroundStyleRaised];
 	[res setButtonType:NSMomentaryChangeButton];
-	[res setBezelStyle:NSSmallSquareBezelStyle];
+	[res setBezelStyle:NSRecessedBezelStyle];
 	[res setBordered:NO];
 
 	[res setImage:image];
@@ -47,6 +49,13 @@ static NSButton* OakCreateImageButton (NSImage* image)
 	// [res setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationHorizontal];
 	// [res setContentHuggingPriority:NSLayoutPriorityDefaultLow forOrientation:NSLayoutConstraintOrientationVertical];
 
+	return res;
+}
+
+static NSImageView* OakCreateImageView (NSImage* image)
+{
+	NSImageView* res = [[NSImageView alloc] initWithFrame:NSZeroRect];
+	[res setImage:image];
 	return res;
 }
 
@@ -67,13 +76,18 @@ const NSInteger BundleItemSelector = 1;
 {
 	if(self = [super initWithGradient:[[NSGradient alloc] initWithColorsAndLocations: [NSColor colorWithCalibratedWhite:1.000 alpha:0.68], 0.0, [NSColor colorWithCalibratedWhite:1.000 alpha:0.5], 0.0416, [NSColor colorWithCalibratedWhite:1.000 alpha:0.0], 1.0, nil] inactiveGradient:[[NSGradient alloc] initWithColorsAndLocations: [NSColor colorWithCalibratedWhite:1.000 alpha:0.68], 0.0, [NSColor colorWithCalibratedWhite:1.000 alpha:0.5], 0.0416, [NSColor colorWithCalibratedWhite:1.000 alpha:0.0], 1.0, nil]])
 	{
-		NSTextField* lineLabel = OakCreateTextField(@"Line:");
-		NSTextField* selectionString = OakCreateTextField(@"1:1");
-		NSPopUpButton* grammarPopUp = OakCreatePopUpButton(@"Objective-C");
+		NSTextField* lineLabel          = OakCreateTextField(@"Line:");
+		NSTextField* selectionString    = OakCreateTextField(@"1:1");
+		NSImageView* dividerOne         = OakCreateImageView([NSImage imageNamed:@"Divider" inSameBundleAsClass:[self class]]);
+		NSPopUpButton* grammarPopUp     = OakCreatePopUpButton(@"Objective-C++");
+		NSImageView* dividerTwo         = OakCreateImageView([NSImage imageNamed:@"Divider" inSameBundleAsClass:[self class]]);
+		NSPopUpButton* tabSizePopUp     = OakCreatePopUpButton(@"Tab Size: 3");
+		NSImageView* dividerThree       = OakCreateImageView([NSImage imageNamed:@"Divider" inSameBundleAsClass:[self class]]);
 		NSPopUpButton* bundleItemsPopUp = OakCreatePopUpButton(@"[GEAR]");
-		NSPopUpButton* tabSizePopUp = OakCreatePopUpButton(@"Tab Size: 3");
-		NSPopUpButton* symbolPopUp = OakCreatePopUpButton(@"- initWithFrame:");
-		NSButton* macroRecordingImage = OakCreateImageButton([NSImage imageNamed:@"RecordingMacro" inSameBundleAsClass:[self class]]);
+		NSImageView* dividerFour        = OakCreateImageView([NSImage imageNamed:@"Divider" inSameBundleAsClass:[self class]]);
+		NSPopUpButton* symbolPopUp      = OakCreatePopUpButton(@"- initWithFrame:");
+		NSImageView* dividerFive        = OakCreateImageView([NSImage imageNamed:@"Divider" inSameBundleAsClass:[self class]]);
+		NSButton* macroRecordingImage   = OakCreateImageButton([NSImage imageNamed:@"Recording" inSameBundleAsClass:[self class]]);
 
 		bundleItemsPopUp.pullsDown = YES;
 		tabSizePopUp.pullsDown     = YES;
@@ -87,6 +101,12 @@ const NSInteger BundleItemSelector = 1;
 		[menu addItemWithTitle:@"Objective-C" action:@selector(nop:) keyEquivalent:@""];
 		bundleItemsPopUp.menu = menu;
 
+		NSView* wrappedBundleItemsPopUpButton = [NSView new];
+		[wrappedBundleItemsPopUpButton addSubview:bundleItemsPopUp];
+		[bundleItemsPopUp setTranslatesAutoresizingMaskIntoConstraints:NO];
+		[wrappedBundleItemsPopUpButton addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[popup]|" options:0 metrics:nil views:@{ @"popup" : bundleItemsPopUp }]];
+		[wrappedBundleItemsPopUpButton addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[popup]|" options:0 metrics:nil views:@{ @"popup" : bundleItemsPopUp }]];
+
 		menu = [NSMenu new];
 		[menu addItemWithTitle:@"Tab Size: 3" action:@selector(nop:) keyEquivalent:@""];
 		[menu addItemWithTitle:@"3" action:@selector(nop:) keyEquivalent:@""];
@@ -97,13 +117,18 @@ const NSInteger BundleItemSelector = 1;
 		[symbolPopUp setContentHuggingPriority:NSLayoutPriorityDefaultLow-1 forOrientation:NSLayoutConstraintOrientationHorizontal];
 
 		NSDictionary* views = @{
-			@"line"      : lineLabel,
-			@"selection" : selectionString,
-			@"grammar"   : grammarPopUp,
-			@"items"     : bundleItemsPopUp,
-			@"tabSize"   : tabSizePopUp,
-			@"symbol"    : symbolPopUp,
-			@"recording" : macroRecordingImage,
+			@"line"         : lineLabel,
+			@"selection"    : selectionString,
+			@"dividerOne"   : dividerOne,
+			@"grammar"      : grammarPopUp,
+			@"dividerTwo"   : dividerTwo,
+			@"items"        : wrappedBundleItemsPopUpButton,
+			@"dividerThree" : dividerThree,
+			@"tabSize"      : tabSizePopUp,
+			@"dividerFour"  : dividerFour,
+			@"symbol"       : symbolPopUp,
+			@"dividerFive"  : dividerFive,
+			@"recording"    : macroRecordingImage,
 		};
 
 		for(NSView* view in [views allValues])
@@ -112,8 +137,10 @@ const NSInteger BundleItemSelector = 1;
 			[self addSubview:view];
 		}
 
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[line]-[selection]-[grammar]-[items]-[tabSize]-[symbol]-[recording]-|" options:NSLayoutFormatAlignAllBaseline metrics:nil views:views]];
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[line]-(4)-|" options:0 metrics:nil views:views]];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[line]-[selection(>=32)]-8-[dividerOne(==1)]-(-2)-[grammar(==115)]-5-[dividerTwo(==1)]-(-2)-[tabSize]-4-[dividerThree(==1)]-5-[items(==30)]-4-[dividerFour(==1)]-(-2)-[symbol]-5-[dividerFive(==1)]-6-[recording]-14-|" options:0 metrics:nil views:views]];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[line]-5-|" options:0 metrics:nil views:views]];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[selection]-5-|" options:0 metrics:nil views:views]];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[grammar(==dividerOne,==items,==tabSize,==symbol,==recording)]|" options:0 metrics:nil views:views]];
 	}
 	return self;
 }
