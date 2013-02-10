@@ -34,6 +34,7 @@ namespace command
 
 		virtual void show_document (std::string const& str) = 0;
 		virtual void show_tool_tip (std::string const& str) = 0;
+		virtual void show_notification (std::string const& str) = 0;
 		virtual void show_error (bundle_command_t const& command, int rc, std::string const& out, std::string const& err) = 0;
 		virtual void detach ()     { }
 		virtual void done ()       { }

@@ -9,7 +9,7 @@
 namespace pre_exec      { enum type { nop = 0, save_document, save_project }; }
 namespace input         { enum type { selection = 0, entire_document, scope, line, word, character, nothing }; }
 namespace input_format  { enum type { text = 0, xml }; }
-namespace output        { enum type { replace_input = 0, replace_document, at_caret, after_input, new_window, tool_tip, discard, replace_selection }; }
+namespace output        { enum type { replace_input = 0, replace_document, at_caret, after_input, new_window, tool_tip, discard, replace_selection, notification }; }
 namespace output_format { enum type { text = 0, snippet, html, completion_list, snippet_no_auto_indent }; }
 namespace output_caret  { enum type { after_output = 0, select_output, interpolate_by_char, interpolate_by_line, heuristic }; }
 

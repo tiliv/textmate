@@ -35,6 +35,7 @@ namespace ng
 
 		void show_document (std::string const& str) { fprintf(stderr, "document: %s\n", str.c_str()); }
 		void show_tool_tip (std::string const& str) { fprintf(stderr, "tool tip: %s\n", str.c_str()); }
+		void show_notification (std::string const& str) { fprintf(stderr, "notification: %s\n", str.c_str()); }
 		void show_error (bundle_command_t const& command, int rc, std::string const& out, std::string const& err) { fprintf(stderr, "error: %s%s\n", out.c_str(), err.c_str()); }
 
 		bool accept_result (std::string const& out, output::type placement, output_format::type format, output_caret::type outputCaret, text::range_t inputRange, std::map<std::string, std::string> const& environment)

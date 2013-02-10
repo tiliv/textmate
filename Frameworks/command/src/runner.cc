@@ -132,7 +132,7 @@ namespace command
 		output_format::type format     = _command.output_format;
 		output_caret::type outputCaret = _command.output_caret;
 
-		enum { exit_discard = 200, exit_replace_text, exit_replace_document, exit_insert_text, exit_insert_snippet, exit_show_html, exit_show_tool_tip, exit_create_new_document };
+		enum { exit_discard = 200, exit_replace_text, exit_replace_document, exit_insert_text, exit_insert_snippet, exit_show_html, exit_show_tool_tip, exit_create_new_document, exit_show_notification };
 		switch(_return_code)
 		{
 			case exit_discard:             placement = output::discard;                                            break;
@@ -143,10 +143,11 @@ namespace command
 			case exit_show_html:           placement = output::new_window;        format = output_format::html;    break;
 			case exit_show_tool_tip:       placement = output::tool_tip;          format = output_format::text;    break;
 			case exit_create_new_document: placement = output::new_window;        format = output_format::text;    break;
+			case exit_show_notification:   placement = output::notification;      format = output_format::text;    break;
 		}
 
 		D(DBF_Command_Runner, bug("placement %d, format %d\n", placement, format););
-		if(_return_code != 0 && !(200 <= _return_code && _return_code <= 207))
+		if(_return_code != 0 && !(200 <= _return_code && _return_code <= 208))
 		{
 			_delegate->show_error(_command, _return_code, _out, _err);
 		}
@@ -173,6 +174,12 @@ namespace command
 			std::string str = trim_right(_err + _out);
 			if(!str.empty())
 				_delegate->show_tool_tip(str);
+		}
+		else if(placement == output::notification)
+		{
+			std::string str = trim_right(_err + _out);
+			if(!str.empty())
+				_delegate->show_notification(str);
 		}
 		else if(placement != output::discard)
 		{

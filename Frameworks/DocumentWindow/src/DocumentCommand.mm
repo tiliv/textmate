@@ -39,6 +39,7 @@ namespace
 
 		void show_tool_tip (std::string const& str);
 		void show_document (std::string const& str);
+		void show_notification (std::string const& str);
 		void show_error (bundle_command_t const& command, int rc, std::string const& out, std::string const& err);
 
 	private:
@@ -176,6 +177,16 @@ void delegate_t::show_tool_tip (std::string const& str)
 void delegate_t::show_document (std::string const& str)
 {
 	document::show(document::from_content(str), _collection);
+}
+
+void delegate_t::show_notification (std::string const& str)
+{
+   NSUserNotification *notification = [[NSUserNotification alloc] init];
+   notification.title = @"Notification";
+   notification.informativeText = [[NSString alloc] initWithUTF8String:str.c_str()];
+   notification.soundName = NSUserNotificationDefaultSoundName;
+
+   [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 }
 
 void delegate_t::show_error (bundle_command_t const& command, int rc, std::string const& out, std::string const& err)

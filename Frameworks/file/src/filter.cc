@@ -103,6 +103,7 @@ namespace
 		bool accept_html_data (command::runner_ptr runner, char const* data, size_t len)   { return fprintf(stderr, "html: %.*s", (int)len, data), false; }
 		void show_document (std::string const& str)                                        { fprintf(stderr, "document: %s\n", str.c_str()); }
 		void show_tool_tip (std::string const& str)                                        { fprintf(stderr, "tool tip: %s\n", str.c_str()); }
+		void show_notification (std::string const& str)                                    { fprintf(stderr, "notification: %s\n", str.c_str()); }
 		void show_error (bundle_command_t const& command, int rc, std::string const& out, std::string const& err) { _context->filter_error(command, rc, out, err); }
 
 		text::range_t write_unit_to_fd (int fd, input::type unit, input::type fallbackUnit, input_format::type format, scope::selector_t const& scopeSelector, std::map<std::string, std::string>& variables, bool* inputWasSelection);

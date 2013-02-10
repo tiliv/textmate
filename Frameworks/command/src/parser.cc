@@ -147,7 +147,7 @@ static void setup_fields (plist::dictionary_t const& plist, bundle_command_t& re
 		res.output_format = pick<output_format::type>(outputFormatString, "text", "snippet", "html", "completionList", NULL);
 
 	if(plist::get_key_path(plist, "outputLocation", outputLocationString))
-		res.output = pick<output::type>(outputLocationString, "replaceInput", "replaceDocument", "atCaret", "afterInput", "newWindow", "toolTip", "discard", "replaceSelection", NULL);
+		res.output = pick<output::type>(outputLocationString, "replaceInput", "replaceDocument", "atCaret", "afterInput", "newWindow", "toolTip", "discard", "replaceSelection", "notification", NULL);
 
 	if(plist::get_key_path(plist, "outputCaret", outputCaretString))
 		res.output_caret = pick<output_caret::type>(outputCaretString, "afterOutput", "selectOutput", "interpolateByChar", "interpolateByLine", "heuristic", NULL);

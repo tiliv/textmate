@@ -58,6 +58,12 @@ struct delegate_t : command::delegate_t
 		placement = output::tool_tip;
 	}
 
+	void show_notification (std::string const& str)
+	{
+		out       = str;
+		placement = output::notification;
+	}
+
 	void show_error (bundle_command_t const& command, int rc, std::string const& out, std::string const& err)
 	{
 		this->out = out;

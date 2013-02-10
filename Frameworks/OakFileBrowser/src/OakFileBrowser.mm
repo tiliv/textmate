@@ -119,6 +119,7 @@ static NSMutableSet* SymmetricDifference (NSMutableSet* aSet, NSMutableSet* anot
 {
 	_outlineView = [[OFBOutlineView alloc] initWithFrame:NSZeroRect];
 	_outlineView.focusRingType            = NSFocusRingTypeNone;
+	// _outlineView.selectionHighlightStyle  = NSTableViewSelectionHighlightStyleSourceList;
 	_outlineView.allowsMultipleSelection  = YES;
 	_outlineView.autoresizesOutlineColumn = NO;
 	_outlineView.headerView               = nil;
