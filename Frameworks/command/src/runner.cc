@@ -81,6 +81,11 @@ namespace command
 			_delegate->detach();
 			_did_detach = true;
 		}
+		else if(_command.output == output::notification)
+		{
+			_delegate->detach();
+			_did_detach = true;
+		}
 	}
 
 	void runner_t::send_html_data (char const* bytes, size_t len)
